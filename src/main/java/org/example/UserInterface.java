@@ -1,14 +1,15 @@
 package org.example;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
 
     private Dealership dealership; //holds dealership data
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in); //reads user input
 
-    //Constructor
-    public UserInterface() {
+    //Load dealership from file
+    private void init() {
 
         //load dealership data directly here
         DealershipFileManager fileManager = new DealershipFileManager();
@@ -24,7 +25,9 @@ public class UserInterface {
 
     //Run menu
     public void display() {
+
         boolean isRunning = true;
+        init();
 
         while (isRunning) {
             System.out.println("---MAIN MENU---");
@@ -64,10 +67,58 @@ public class UserInterface {
 
     //Process Methods for each menu option
     private void processGetByPriceRequest(){
-        //ADD
+        System.out.println("Enter minimum price: ");
+        double min = Double.parseDouble(scanner.nextLine());
+        System.out.println("Enter maximum price: ");
+        double max = Double.parseDouble(scanner.nextLine());
+
+        List<Vehicle> vehicles = dealership.getVehiclesByPrice(min, max);
+        displayVehicles(vehicles);
     }
     private void processGetByMakeModelRequest(){
         //ADD
+    }
+
+    private void processGetByYearRequest(){
+        //ADD
+    }
+
+    private void processGetByColorRequest(){
+        //ADD
+    }
+
+    private void processGetByMileageRequest(){
+        //ADD
+    }
+
+    private void processGetByVehicleTypeRequest(){
+        //ADD
+    }
+
+    private void processGetAllVehiclesRequest(){
+        List<Vehicle> allVehicles = dealership.getAllVehicles();
+        displayVehicles(allVehicles);
+    }
+
+    private void processAddVehiclesRequest(){
+        //ADD
+    }
+
+    private void processRemoveVehiclesRequest(){
+        //ADD
+    }
+
+    private void displayVehicles(List<Vehicle> vehicles) {
+        if(vehicles.isEmpty()) {
+            System.out.println("No vehicles found.");
+        } else {
+            for (Vehicle v : vehicles) {
+                System.out.println(v);
+            }
+        }
+        //Pause for smoother experience
+        System.out.println("\nPress enter to return to the main menu");
+        scanner.nextLine();
     }
 
 }

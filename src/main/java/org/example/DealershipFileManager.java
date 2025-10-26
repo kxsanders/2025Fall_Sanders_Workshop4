@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DealershipFileManager {
 
-    private static String fileName = "inventory.csv";
+    private static String fileName = "src/main/resources/inventory.csv";
 
     //Reads dealership file, builds dealership object
     public Dealership getDealership() {
