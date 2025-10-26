@@ -217,11 +217,18 @@ public class UserInterface {
                 System.out.println("Input cannot be empty. Try again.");
             }
 
-            // input.matches("\\d+") checks if the entire input is made up of only digits
-            // if true, it's a number and we ask the user again for a text input
-            if (input.matches("\\d+")) {
-                System.out.println("Please enter text, not a number.");
+            // input.matches [a-zA-Z\\s-]+ (I looked this up for a way to catch symbols as well)
+            // a-z allow any lower case char through a-z
+            // A-Z allow any cap char through A-Z
+            // \\s space character, allows spaces like "Ford Focus"
+            // - is hyphens for like "F-150"
+            // [] anything inside the brackets are allowed
+            // + one or more of the allowed characters
+            if (!input.matches("[a-zA-Z\\s-]+")) {
+                System.out.println("Please enter letters only (no numbers or symbols).");
+                continue;
             }
+
 
             return input;
         }
