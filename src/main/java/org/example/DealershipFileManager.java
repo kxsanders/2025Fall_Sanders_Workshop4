@@ -1,9 +1,6 @@
 package org.example;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 public class DealershipFileManager {
@@ -63,9 +60,24 @@ public class DealershipFileManager {
 
     }
 
-    // ADD LATER
+
     public void saveDealership (Dealership dealership){
-        //DO: SAVE DATA TO FILE
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))){
+            //Dealership info first
+            writer.write(dealership.getName() + "|" + dealership.getAddress() + "|" + dealership.getPhone());
+            writer.newLine();
+
+            //write each vehicle
+            for (Vehicle v : dealership.getAllVehicles()){
+                writer.write(v.getVin() + "|" + v.getYear() + "|" + v.getMake() + "|" + v.getModel() + "|" + v.getVehicleType() + "|" + v.getColor() + "|" + v.getOdometer() + "|" + v.getPrice());
+                writer.newLine();
+            }
+            System.out.println("Inventory saved successfully.");
+        }
+        catch(IOException exception){
+            System.out.println("Error saving dealership file.");
+        }
+
     }
 
 }

@@ -55,5 +55,8 @@ public class Vehicle {
         return price;
     }
 
-    //Maybe add some formatting here
+    //add some formatting here
+    public String toString() {
+        return year + " " + make + " " + model + " (" + color + ") - $" + price;
+    }
 }
