@@ -9,7 +9,7 @@ public class ContractFileManager {
     private static final String FILE_NAME = "src/main/resources/contracts.csv";
     private List<Contract> contracts;
 
-    //constructor: initialize list
+    //constructor: instantiate list
     public ContractFileManager() {
         contracts = new ArrayList<>();
     }
@@ -22,22 +22,25 @@ public class ContractFileManager {
     // Add contract and save all
     public void addContract(Contract contract) {
         contracts.add(contract);
-        saveAllContracts();
+        appendContractToFile(contract);
     }
 
     // Save entire list of contracts to CSV
-    private void saveAllContracts() {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FILE_NAME))){
+    private void appendContractToFile(Contract contract) {
+        File file = new File(FILE_NAME);
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))){
 
             //Write Header for clarity
-            bufferedWriter.write("CONTRACT_TYPE|DATE|CUSTOMER_NAME|CUSTOMER_EMAIL|VIN|YEAR|MAKE|MODEL|VEHICLE_TYPE|COLOR|ODOMETER|VEHICLE_PRICE|CONTRACT_FIELDS|TOTAL_PRICE|MONTHLY_PAYMENT");
-            bufferedWriter.newLine();
-
-            //Write each contract
-            for(Contract c : contracts){
-                bufferedWriter.write(c.toCSV());
+            if (file.length() == 0) {
+                bufferedWriter.write("CONTRACT_TYPE|DATE|CUSTOMER_NAME|CUSTOMER_EMAIL|VIN|YEAR|MAKE|MODEL|VEHICLE_TYPE|COLOR|ODOMETER|VEHICLE_PRICE|CONTRACT_FIELDS|TOTAL_PRICE|MONTHLY_PAYMENT");
                 bufferedWriter.newLine();
             }
+
+            //Write each contract
+            bufferedWriter.write(contract.toCSV());
+            bufferedWriter.newLine();
+
             System.out.println("Contract(s) saved successfully.");
         }
         catch (IOException exception){

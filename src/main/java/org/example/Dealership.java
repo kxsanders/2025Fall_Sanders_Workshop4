@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dealership {
+    private List<Vehicle> vehicles= new ArrayList<>();
 
     private String name;
     private String address;
@@ -96,6 +97,15 @@ public class Dealership {
             }
         }
         return false;
+    }
+
+    public Vehicle getVehicleByVin(int vin) {
+        for(Vehicle v: vehicles) { //loop through all vehicles
+            if (v.getVin() == vin) {
+            return v;
+            }
+        }
+        return null; //If not found, return null
     }
 
 

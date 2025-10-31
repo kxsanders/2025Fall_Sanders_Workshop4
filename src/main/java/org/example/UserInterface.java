@@ -56,7 +56,7 @@ public class UserInterface {
                 case "7": processGetAllVehiclesRequest(); break;
                 case "8": processAddVehiclesRequest(); break;
                 case "9": processRemoveVehiclesRequest(); break;
-                case "10": processSellLeaseVehcileRequest(); break;
+                case "10": processSellLeaseVehicleRequest(); break;
                 case "99":
                     System.out.println("Goodbye!");
                     isRunning = false;
@@ -153,12 +153,40 @@ public class UserInterface {
         }
     }
 
-    private void processSellLeaseVehcileRequest(){
+    private void processSellLeaseVehicleRequest(){
         try {
             //Get VIN of the vehicle to sell/lease
             int vin = getIntInput("Enter VIN of the vehicle:");
 
             Vehicle vehicle = dealership.getVehicleByVin(vin);
+            if (vehicle == null) {
+                System.out.println("Vehicle not found.");
+                return;
+            }
+
+            //Get customer info
+            String customerName = getStringInput("Enter customer name: ");
+            String customerEmail = getStringInput("Enter customer email: ");
+            String date = getStringInput("Enter date: (YYYY/MM/DD");
+
+            //Ask Sale or Lease
+            String option;
+            while(true) {
+                option = getStringInput("Is this a SALE or a LEASE?").toUpperCase();
+                if(option.equals("SALE") || option.equals("LEASE"))
+                    break;
+                System.out.println("Please enter SALE or LEASE.");
+
+                //Check lease eligibility (vehicle is <= 3 years old)
+                if (option.equals("LEASE")) {
+                    int currentYear = java.time.Year.now().getValue();
+                    if (currentYear - vehicle.getYear() > 3) {
+                        System.out.println("Vehicle too old to lease. Switching to SALE.");
+                        option = "SALE";
+                    }
+                }
+            }
+
         }
     }
 
