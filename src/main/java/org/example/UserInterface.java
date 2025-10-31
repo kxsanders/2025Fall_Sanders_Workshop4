@@ -40,6 +40,7 @@ public class UserInterface {
             System.out.println("7) List ALL vehicles");
             System.out.println("8) Add a vehicle");
             System.out.println("9) Remove a vehicle");
+            System.out.println("10) Sell/Lease a vehicle");
             System.out.println("-----------------");
             System.out.println("99) QUIT");
 
@@ -55,6 +56,7 @@ public class UserInterface {
                 case "7": processGetAllVehiclesRequest(); break;
                 case "8": processAddVehiclesRequest(); break;
                 case "9": processRemoveVehiclesRequest(); break;
+                case "10": processSellLeaseVehcileRequest(); break;
                 case "99":
                     System.out.println("Goodbye!");
                     isRunning = false;
@@ -151,6 +153,15 @@ public class UserInterface {
         }
     }
 
+    private void processSellLeaseVehcileRequest(){
+        try {
+            //Get VIN of the vehicle to sell/lease
+            int vin = getIntInput("Enter VIN of the vehicle:");
+
+            Vehicle vehicle = dealership.getVehicleByVin(vin);
+        }
+    }
+
     private void displayVehicles(List<Vehicle> vehicles) {
         if(vehicles.isEmpty()) {
             System.out.println("No vehicles found.");
@@ -177,6 +188,7 @@ public class UserInterface {
         System.out.println("\nPress enter to return to the main menu");
         scanner.nextLine();
     }
+
 
     //.........................HELPER METHODS...........................
     //Rewrote my Process methods to go with Helper methods.
@@ -228,7 +240,6 @@ public class UserInterface {
                 System.out.println("Please enter letters only (no numbers or symbols).");
                 continue;
             }
-
 
             return input;
         }
