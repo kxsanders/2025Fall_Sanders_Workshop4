@@ -1,5 +1,6 @@
 package org.example;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -157,8 +158,8 @@ public class UserInterface {
         try {
             //Get VIN of the vehicle to sell/lease
             int vin = getIntInput("Enter VIN of the vehicle:");
-
             Vehicle vehicle = dealership.getVehicleByVin(vin);
+
             if (vehicle == null) {
                 System.out.println("Vehicle not found.");
                 return;
@@ -167,26 +168,55 @@ public class UserInterface {
             //Get customer info
             String customerName = getStringInput("Enter customer name: ");
             String customerEmail = getStringInput("Enter customer email: ");
-            String date = getStringInput("Enter date: (YYYY/MM/DD");
+            String date = getStringInput("Enter date: (YYYYMMDD");
 
-            //Ask Sale or Lease
+            //Ask SALE or LEASE
             String option;
             while(true) {
                 option = getStringInput("Is this a SALE or a LEASE?").toUpperCase();
-                if(option.equals("SALE") || option.equals("LEASE"))
-                    break;
-                System.out.println("Please enter SALE or LEASE.");
-
-                //Check lease eligibility (vehicle is <= 3 years old)
-                if (option.equals("LEASE")) {
-                    int currentYear = java.time.Year.now().getValue();
-                    if (currentYear - vehicle.getYear() > 3) {
-                        System.out.println("Vehicle too old to lease. Switching to SALE.");
-                        option = "SALE";
+                if (option.equals("SALE") || option.equals("LEASE")) {
+                    //Check lease eligibility (vehicle is <= 3 years old)
+                    if (option.equals("LEASE")) {
+                        int currentYear = java.time.Year.now().getValue();
+                        if (currentYear - vehicle.getYear() > 3) {
+                            System.out.println("Vehicle too old to lease. Switching to SALE.");
+                            option = "SALE";
+                        }
                     }
+                    break;
+                }
+                else {
+                    System.out.println("Please enter SALE or LEASE.");
                 }
             }
 
+                //Create correct contract type
+                Contract contract;
+                if (option.equals("SALE")) {
+                    boolean financeOption = getStringInput("Would you like to finance? Type YES or NO: ").equalsIgnoreCase("yes");
+                    contract = new SalesContract(date, customerName, customerEmail, vehicle, financeOption);
+                }
+                else {
+                    double expectedEndingValue = vehicle.getPrice() * 0.5; //50% of price
+                    double leaseFee = vehicle.getPrice() * 0.07; //7% lease fee
+                    contract = new LeaseContract(date, customerName, customerEmail, vehicle, expectedEndingValue, leaseFee);
+                }
+
+                // save contract to file
+                ContractFileManager contractFileManager = new ContractFileManager();
+                contractFileManager.addContract(contract);
+                System.out.println("Error processing sale/lease.");
+
+                //remove the sold/leased vehicle from inventory
+                dealership.removeVehicle(vin);
+                DealershipFileManager fileManager = new DealershipFileManager();
+                fileManager.saveDealership(dealership);
+
+                System.out.println("Contract created. Vehicle removed from inventory.");
+                System.out.println("Contract details saved to contracts.csv");
+
+        } catch (Exception exception) {
+            System.out.println("Error processing sale/lease: ");
         }
     }
 
@@ -255,6 +285,7 @@ public class UserInterface {
 
             if (input.isEmpty()) {
                 System.out.println("Input cannot be empty. Try again.");
+                continue;
             }
 
             // input.matches [a-zA-Z\\s-]+ (I looked this up for a way to catch symbols as well)
@@ -264,11 +295,30 @@ public class UserInterface {
             // - is hyphens for like "F-150"
             // [] anything inside the brackets are allowed
             // + one or more of the allowed characters
+
+            //If the prompt mentions "email", allow @ and .
+            if (prompt.toLowerCase().contains("email")) {
+                //email validation that I looked up
+                if (!input.matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+                    System.out.println("Invalid email format. Please enter a valid email address.");
+                    continue;
+                }
+                return input;
+            }
+
+            if (prompt.toLowerCase().contains("date")) {
+                //need 8 digits for YYYMMDD
+                if (!input.matches("\\d{8}")) {
+                    System.out.println("Invalid date. Please enter 8 digits as YYYYMMDD.");
+                    continue;
+                }
+                return input; //store as YYYYMMDD
+            }
+
             if (!input.matches("[a-zA-Z\\s-]+")) {
                 System.out.println("Please enter letters only (no numbers or symbols).");
                 continue;
             }
-
             return input;
         }
     }

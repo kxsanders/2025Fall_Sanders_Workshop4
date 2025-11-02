@@ -25,7 +25,7 @@ public class ContractFileManager {
         appendContractToFile(contract);
     }
 
-    // Save entire list of contracts to CSV
+    // append contract to file
     private void appendContractToFile(Contract contract) {
         File file = new File(FILE_NAME);
 
