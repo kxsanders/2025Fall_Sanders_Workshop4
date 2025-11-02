@@ -170,6 +170,13 @@ public class UserInterface {
             String customerEmail = getStringInput("Enter customer email: ");
             String date = getStringInput("Enter date: (YYYYMMDD");
 
+            //Temp contracts to show pricing
+            SalesContract tempSale = new SalesContract(date, customerName, customerEmail, vehicle, false);
+            LeaseContract tempLease = new LeaseContract(date, customerName, customerEmail, vehicle, vehicle.getPrice() * 0.5, vehicle.getPrice() * 0.07);
+
+            System.out.printf("SALE: Total Price = $%.2f, Monthly Payment = $%.2f%n", tempSale.getTotalPrice(), tempSale.getMonthlyPayment());
+            System.out.printf("LEASE: Total Price = $%.2f, Monthly Payment = $%.2f%n", tempLease.getTotalPrice(), tempSale.getMonthlyPayment());
+
             //Ask SALE or LEASE
             String option;
             while(true) {
