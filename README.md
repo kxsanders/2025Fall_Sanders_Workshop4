@@ -1,156 +1,142 @@
-🚗 Dealership Management System
+# 🚗 Vehicle Dealership Management System
 
-A Java console application to manage a vehicle dealership.
-Manage inventory, sell or lease vehicles, and save contracts with CSV persistence.
+Welcome to the **Vehicle Dealership Management System**!  
+This Java application allows a dealership to manage inventory, process sales and leases, and track contracts. Perfect for learning **OOP concepts**, **file handling**, and **user interfaces** in Java.
 
-✨ Features
-🛠️ Vehicle Management
+---
 
-🔍 Search vehicles by:
+## 📝 Features
 
-💰 Price range
+- **Inventory Management**
+  - Add new vehicles to the dealership
+  - Remove vehicles from inventory
+  - Search vehicles by:
+    - Price range 💰
+    - Make/Model 🔧
+    - Year range 📅
+    - Color 🎨
+    - Mileage 🛣️
+    - Vehicle type (Car, Truck, SUV, Van) 🚙
 
-🚗 Make & Model
+- **Sales & Lease Processing**
+  - Sell a vehicle
+  - Lease a vehicle (if eligible) 📝
+  - Generate and save contracts to `contracts.csv`  
 
-📅 Year range
+- **File Management**
+  - Load and save dealership inventory (`inventory.csv`)
+  - Append and save contracts (`contracts.csv`)
+  - Supports headers and CSV parsing
 
-🎨 Color
+- **User-Friendly Interface**
+  - Menu-driven system
+  - Input validation for numbers, text, and emails ✉️
+  - Displays vehicle inventory in a readable table format
 
-🛣️ Mileage range
+---
 
-🚙 Type (Car, Truck, SUV, Van)
+## 💻 How It Works
 
-➕ Add new vehicles to inventory
+1. **Load Dealership**
+   - Reads `inventory.csv` to populate the dealership inventory
+2. **Display Menu**
+   - Options 1–10 to search, add, remove, or sell/lease vehicles
+3. **Process Sale or Lease**
+   - Sale:
+     - Optional financing
+     - Calculates total price and monthly payments
+   - Lease:
+     - Vehicle must be ≤ 3 years old
+     - Calculates lease fee, expected ending value, and monthly payments
+4. **Save Contracts**
+   - Each contract is appended to `contracts.csv`  
+   - Removes vehicle from inventory after sale/lease
+5. **Exit Program**
+   - Updates all files and exits gracefully
 
-❌ Remove vehicles from inventory
+---
 
-💾 Save inventory to inventory.csv
+## 🛠️ Classes & Structure
 
-💳 Sales & Lease Management
+- **Dealership**
+  - Stores dealership info and inventory
+  - Provides methods to search, add, remove, and get vehicles by VIN
 
-🏷️ Sell or lease a vehicle
+- **Vehicle**
+  - Holds vehicle data (VIN, year, make, model, type, color, odometer, price)
 
-💵 Display total price and monthly payment for both sale and lease
+- **Contract (Abstract)**
+  - Base class for `SalesContract` and `LeaseContract`
+  - Abstract methods:
+    - `getTotalPrice()`
+    - `getMonthlyPayment()`
+    - `getType()`
 
-✅ Lease eligibility check (vehicles ≤ 3 years old)
+- **SalesContract**
+  - Extends `Contract`
+  - Calculates total price and monthly payment (optional finance)
 
-🏦 Option to finance a sale
+- **LeaseContract**
+  - Extends `Contract`
+  - Calculates lease fee, expected ending value, and monthly payment
 
-💾 Save contracts to contracts.csv
+- **File Managers**
+  - `DealershipFileManager` → Handles inventory CSV
+  - `ContractFileManager` → Handles contracts CSV (append & load)
 
-🗄️ Data Persistence
+- **UserInterface**
+  - Menu-driven interface
+  - Input validation and display formatting
+  - Handles user interactions for all menu options
 
-Inventory: src/main/resources/inventory.csv
+---
 
-Contracts: src/main/resources/contracts.csv
+## ⚡ Input Guidelines
 
-Files automatically created & updated
+- **Numbers**: Only integers or doubles for VIN, year, price, mileage
+- **Text**: Letters, spaces, hyphens allowed for names and vehicle make/model
+- **Emails**: Standard format (`example@domain.com`)
+- **Date**: YYYYMMDD (converted internally to `YYYY/MM/DD`)
 
-🖥️ User Interface
+---
 
-Interactive console menu
+## 📂 CSV File Format
 
-Input validation:
-
-✍️ Names: letters only
-
-📧 Emails: must include @ and .
-
-📅 Dates: YYYYMMDD
-
-🔢 Numbers: VIN, price, odometer, year
-
-Clean formatted vehicle list
-
-📂 Project Structure
-src/main/java/org/example/
-├── Vehicle.java               # Vehicle class
-├── Dealership.java            # Manages inventory
-├── DealershipFileManager.java # Reads/Writes inventory.csv
-├── Contract.java              # Abstract contract class
-├── SalesContract.java         # Implements Contract for sales
-├── LeaseContract.java         # Implements Contract for leases
-├── ContractFileManager.java   # Reads/Writes contracts.csv
-├── UserInterface.java         # Console menu & input handling
-└── Main.java                  # Entry point
-
-⚙️ Installation & Run
-
-Clone/download repository
-
-Ensure Java 8+ is installed
-
-Compile:
-
-javac -d bin src/main/java/org/example/*.java
-
-
-Run:
-
-java -cp bin org.example.Main
-
-📝 CSV Format
-Inventory (inventory.csv)
+### Inventory (`inventory.csv`)
 VIN|Year|Make|Model|Type|Color|Odometer|Price
-12345|2022|Toyota|Camry|Car|Blue|15000|24000.0
+12345|2022|Toyota|Camry|Car|Blue|15000|25000
+...
 
-Contracts (contracts.csv)
+shell
+Copy code
+
+### Contracts (`contracts.csv`)
 CONTRACT_TYPE|DATE|CUSTOMER_NAME|CUSTOMER_EMAIL|VIN|YEAR|MAKE|MODEL|VEHICLE_TYPE|COLOR|ODOMETER|VEHICLE_PRICE|CONTRACT_FIELDS|TOTAL_PRICE|MONTHLY_PAYMENT
-SALE|20251002|John Doe|john@example.com|12345|2022|Toyota|Camry|Car|Blue|15000|24000.0|NO FINANCE|24000.0|24000.0
-LEASE|20251002|Jane Smith|jane@example.com|12346|2023|Honda|Civic|Car|Red|10000|26000.0|13000.0|13100.0|387.0
+SALE|2025/11/02|John Doe|john@example.com|12345|2022|Toyota|Camry|Car|Blue|15000|25000|FINANCE:YES|25500|425.00
+LEASE|2025/11/02|Jane Smith|jane@example.com|54321|2023|Honda|Civic|Car|Red|5000|22000|LEASE_FEE:1540|13500|410.00
+...
 
-🖱️ How It Works
+yaml
+Copy code
 
-🚀 Start program → loads inventory from inventory.csv
+---
 
-📝 Main menu:
+## 🚀 How to Run
 
-Search vehicles 🔍
+1. Clone or download the repository  
+2. Ensure you have Java 8 or higher installed  
+3. Open the project in your IDE (IntelliJ, VS Code, etc.)  
+4. Run `UserInterface` class  
+5. Follow menu prompts to interact with the dealership
 
-List all vehicles 📋
+---
 
-Add/remove vehicles ➕❌
+## 🎯 Notes
 
-Sell/lease vehicle 💳
-
-💵 Sell/Lease Process:
-
-Enter vehicle VIN
-
-Enter customer info & date
-
-Display pricing for sale and lease
-
-Confirm SALE or LEASE
-
-If SALE → ask about financing
-
-Contract created & saved
-
-Vehicle removed from inventory
-
-💾 CSV files updated automatically
-
-🛡️ Input Validation
-
-✍️ Names: Letters, spaces, hyphens only
-
-📧 Emails: Must include @ and .
-
-📅 Dates: Enter as YYYYMMDD (normalized automatically)
-
-🔢 Numbers: VIN, year, odometer, price
-
-📌 Notes
-
-Lease only eligible for vehicles ≤ 3 years old
-
-Finance option available only for SALE contracts
-
-Console-based UI, no GUI
-
-CSV files created if missing
-
+- Lease eligibility: Only vehicles ≤ 3 years old  
+- Contracts are **appended** to `contracts.csv` to avoid overwriting  
+- Input validation ensures smooth user experience  
+- Displays all vehicles in a formatted table  
 
 👤 Author
 Kayla Sanders
